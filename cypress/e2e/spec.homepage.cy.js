@@ -3,7 +3,7 @@ describe('challenge-3 test cases', () => {
   // test case 1 (check page title and headliner)
   it('test1 opens w&c site and checks page title', () => {
     cy.visit('https://work.co/')
-    cy.title().should('have.text', 'Work & Co | Digital Product Agency')
+    cy.title().should('eq', 'Work & Co | Digital Product Agency')
     cy.get('[data-test-id="header-title-text"]').should('have.text', 'We design and ship digital products that transform companies.')
   })
 
