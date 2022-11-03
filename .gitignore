@@ -1,4 +1,2 @@
 node_modules
 cypress/videos/
-spec.cy.js
-spec.test.cy.js
