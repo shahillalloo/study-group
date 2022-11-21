@@ -1,4 +1,4 @@
-describe('challenge-4 test cases', () => {
+describe('saucedemo test cases', () => {
 
     // test case 1 (check page title and headline)
     it('test1 opens sauce demo site and checks page title', () => {
@@ -25,6 +25,19 @@ describe('challenge-4 test cases', () => {
       cy.get('[data-test="password"]').type('secret_sauce')
       cy.get('[data-test="login-button"]').click()
       cy.url().should('be.equal', 'https://www.saucedemo.com/inventory.html')
+    })
+
+    //challenge 5 - test case1 (login and logout)
+    it('challenge5/test1 login as standard user, logout, check url', () => {
+      cy.visit('https://www.saucedemo.com/')
+      cy.get('[data-test="username"]').click()
+      cy.get('[data-test="username"]').type('standard_user')
+      cy.get('[data-test="password"]').click()
+      cy.get('[data-test="password"]').type('secret_sauce')
+      cy.get('[data-test="login-button"]').click()
+      cy.get('[id="react-burger-menu-btn"]').click()
+      cy.get('[id="logout_sidebar_link"]').click()
+      cy.url().should('be.equal', 'https://www.saucedemo.com/')
     })
   })
     
