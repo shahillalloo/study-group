@@ -44,7 +44,6 @@ describe('sauce demo cart flows', () => {
         // populate last name
         cy.get('[data-test="lastName"]').type('La')
         // populate zip
-        cy.get('[data-test="postalCode"]').click()
         cy.get('[data-test="postalCode"]').type('12440')
         // click continue
         cy.get('[data-test="continue"]').click()
@@ -62,7 +61,7 @@ describe('sauce demo cart flows', () => {
         // click back home button, validate you return to inventory page and cart is empty
         cy.get('[data-test="back-to-products"]').click()
         cy.url().should('be.equal', 'https://www.saucedemo.com/inventory.html')
-        cy.get('shopping_cart_badge').should('not.exist')
+        cy.get('.shopping_cart_badge').should('not.exist')
     })
 
     //test3 remove item
