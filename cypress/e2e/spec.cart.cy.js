@@ -1,6 +1,6 @@
 describe('sauce demo cart flows', () => {
     beforeEach(() => {
-        cy.login('standard_user, secret_sauce')
+        cy.login('standard_user', 'secret_sauce')
     })
 
     it('try to checkout without any items added to cart', () => {
