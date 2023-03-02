@@ -1,89 +1,95 @@
+import LandingPage from "../support/page_objects/landing-page.js"
+import InventoryPage from "../support/page_objects/inventory-page"
+import CheckoutPage from "../support/page_objects/checkout-page"
+import CartPage from "../support/page_objects/cart-page"
+
 describe('sauce demo cart flows', () => {
     beforeEach(() => {
-        cy.login('standard_user', 'secret_sauce')
+        LandingPage.open();
+        LandingPage.login('standard_user', 'secret_sauce')
     })
 
     it('try to checkout without any items added to cart', () => {
         // click cart
-        cy.get('.shopping_cart_link').click()
+        InventoryPage.shoppingCart.click();
         cy.url().should('be.equal', 'https://www.saucedemo.com/cart.html')
         // click checkout
-        cy.get('[data-test="checkout"]').click()
+        CartPage.checkoutBtn.click();
         cy.url().should('be.equal', 'https://www.saucedemo.com/checkout-step-one.html')
         // click continue and validate error
-        cy.get('[data-test="continue"]').click()
-        cy.get('[data-test="error"]').should('have.text', 'Error: First Name is required')
+        CheckoutPage.continueBtn.click()
+        CheckoutPage.errorAlert.should('have.text', 'Error: First Name is required')
     })
 
     it('add item to cart and successfully checkout', () => {
         // validate cart badge doesn't exist
-        cy.get('.shopping_cart_badge').should('not.exist')
+        InventoryPage.shoppingCartBadge.should('not.exist')
         // add backpack to cart from inventory page
-        cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click()
+        InventoryPage.sauceLabsBackpack.click()
         // validate cart badge displays 1
-        cy.get('.shopping_cart_badge').should('exist')
-        cy.get('.shopping_cart_badge').should('contain', '1')
+        InventoryPage.shoppingCartBadge.should('exist')
+        InventoryPage.shoppingCartBadge.should('contain', '1')
         // go to cart
-        cy.get('.shopping_cart_link').click()
+        InventoryPage.shoppingCart.click()
         // validate item is in cart
-        cy.get('.inventory_item_name').should('have.text', 'Sauce Labs Backpack')
-        cy.get('.cart_quantity').should('contain', '1')
-        cy.get('.inventory_item_price').should('have.text', '$29.99')
+        CartPage.itemName.should('have.text', 'Sauce Labs Backpack')
+        CartPage.cartQuantity.should('contain', '1')
+        CartPage.itemPrice.should('have.text', '$29.99')
         // validate remove, continue, checkout buttons display
-        cy.get('[data-test="remove-sauce-labs-backpack"]').should('exist')
-        cy.get('[data-test="continue-shopping"]').should('exist')
-        cy.get('[data-test="checkout"]').should('exist')
+        CartPage.removeBackpackBtn.should('exist')
+        CartPage.continueShoppingBtn.should('exist')
+        CartPage.checkoutBtn.should('exist')
         // checkout
-        cy.get('[data-test="checkout"]').click()
+        CartPage.checkoutBtn.click()
         // populate first name
-        cy.get('[data-test="firstName"]').type('Shah')
+        CheckoutPage.firstName.type('Shah')
         // populate last name
-        cy.get('[data-test="lastName"]').type('La')
+        CheckoutPage.lastName.type('La')
         // populate zip
-        cy.get('[data-test="postalCode"]').type('12440')
+        CheckoutPage.postalCode.type('12440')
         // click continue
-        cy.get('[data-test="continue"]').click()
+        CheckoutPage.continueBtn.click()
         cy.url().should('be.equal', 'https://www.saucedemo.com/checkout-step-two.html')
         // validate item is in order
-        cy.get('.inventory_item_name').should('have.text', 'Sauce Labs Backpack')
-        cy.get('.cart_quantity').should('contain', '1')
-        cy.get('.inventory_item_price').should('have.text', '$29.99')
+        CheckoutPage.itemName.should('have.text', 'Sauce Labs Backpack')
+        CheckoutPage.cartQuantity.should('contain', '1')
+        CheckoutPage.itemPrice.should('have.text', '$29.99')
         // click finish
-        cy.get('[data-test="finish"]').click()
+        CheckoutPage.finishBtn.click()
         cy.url().should('be.equal', 'https://www.saucedemo.com/checkout-complete.html')
         // validate confirmation page (header and back home button)
-        cy.get('.complete-header').should('contain', 'THANK YOU FOR YOUR ORDER')
-        cy.get('[data-test="back-to-products"]').should('exist')
+        CheckoutPage.completeHeader.should('contain', 'THANK YOU FOR YOUR ORDER')
+        CheckoutPage.backBtn.should('exist')
         // click back home button, validate you return to inventory page and cart is empty
-        cy.get('[data-test="back-to-products"]').click()
+        CheckoutPage.backBtn.click()
         cy.url().should('be.equal', 'https://www.saucedemo.com/inventory.html')
-        cy.get('.shopping_cart_badge').should('not.exist')
+        CheckoutPage.shoppingCartBadge.should('not.exist')
     })
 
     it('add shirt and remove item from cart and validate bag is empty', () => {
         // add shirt to cart from inventory page
-        cy.get('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]').click()
+        InventoryPage.sauceLabsTee.click()
         // validate cart badge displays 1
-        cy.get('.shopping_cart_badge').should('exist')
-        cy.get('.shopping_cart_badge').should('contain', '1')
+        InventoryPage.shoppingCartBadge.should('exist')
+        InventoryPage.shoppingCartBadge.should('contain', '1')
         // navigate to cart and remove item
-        cy.get('.shopping_cart_link').click()
-        cy.get('[data-test="remove-sauce-labs-bolt-t-shirt"]').click()
+        InventoryPage.shoppingCart.click()
+        CartPage.removeTeeBtn.click()
         // validate bag is empty
-        cy.get('.shopping_cart_badge').should('not.exist')
+        CartPage.shoppingCartBadge.should('not.exist')
     })
 
     it('add an item and validate continue shopping flow', () => {
         // add bike light to cart from inventory page
-        cy.get('[data-test="add-to-cart-sauce-labs-bike-light"]').click()
+        InventoryPage.sauceLabsBikeLight.click()
         // navigate to cart 
-        cy.get('.shopping_cart_link').click()
+        InventoryPage.shoppingCart.click()
         // click continue shopping button to return to inventory page
-        cy.get('[data-test="continue-shopping"]').click()
+        CartPage.continueShoppingBtn.click()
         cy.url().should('be.equal', 'https://www.saucedemo.com/inventory.html')
         // validate cart badge displays 1
-        cy.get('.shopping_cart_badge').should('exist')
-        cy.get('.shopping_cart_badge').should('contain', '1')
+        InventoryPage.shoppingCartBadge.should('exist')
+        InventoryPage.shoppingCartBadge.should('contain', '1')
     })
 })
 
